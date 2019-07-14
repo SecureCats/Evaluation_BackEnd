@@ -4,7 +4,7 @@ from . import views
 urlpatterns = [
     path('api/', include([
         path('v1/', include([
-            path('init/<str:classno>/<str:semaster>', views.query_question_list)
+            path('init', views.query_question_list)
         ]))
     ]))
 ]

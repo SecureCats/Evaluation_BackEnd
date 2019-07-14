@@ -40,7 +40,7 @@ class Course(models.Model):
 
     course_name = models.CharField('课程名称', max_length=20)
     course_no = models.CharField('课程编号', unique=True, max_length=20)
-    semaster = models.CharField('学期', max_length=20)
+    semeser = models.CharField('学期', max_length=20)
     teaching_class = models.ManyToManyField(TeachingClass)
 
     def __str__(self):

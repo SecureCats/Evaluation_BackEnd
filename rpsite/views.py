@@ -4,11 +4,13 @@ from django.http import JsonResponse
 from . import models
 
 # Create your views here.
-def query_question_list(request, classno, semaster):
+def query_question_list(request):
+    classno = request.GET['classno']
+    semester = request.GET['semester']
     course_list = get_list_or_404(
         models.Course, 
         teaching_class__classno=classno, 
-        semaster=semaster    
+        semester=semester    
     )
     questions = []
     question_set = models.Question.objects.all()

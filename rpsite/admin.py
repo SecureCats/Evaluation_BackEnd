@@ -22,7 +22,7 @@ class CourseAdmin(admin.ModelAdmin):
     ]
     exclude = ('teaching_class',)
     list_display = [
-        '__str__', 'course_no', 'semaster'
+        '__str__', 'course_no', 'semeser'
     ]
 
 @admin.register(models.TeachingClass)
