@@ -16,17 +16,17 @@ class VeryfyTest(TestCase):
         s = random.randrange(1<<8196)
         e = number.getPrime(2050)
         d = int(gmpy2.invert(e, (test_privkey-1)*(q-1)))
-        tmp = pow(pubkey['a'], uk, pubkey['n']) * \
-            pow(pubkey['b'], s, pubkey['n']) * \
+        tmp = gmpy2.powmod(pubkey['a'], uk, pubkey['n']) * \
+            gmpy2.powmod(pubkey['b'], s, pubkey['n']) * \
             pubkey['c'] % pubkey['n']
-        v = pow(tmp, d, pubkey['n'])
-        left = pow(v, e, pubkey['n'])
+        v = gmpy2.powmod(tmp, d, pubkey['n'])
+        left = gmpy2.powmod(v, e, pubkey['n'])
         right = tmp
         self.assertEqual(left, right)
         # the signiture is (e, v, s)
         classno = 666
         grnym = int(sha256(str(classno).encode()).hexdigest(), 16) % 731499577
-        grnym = pow(grnym, settings.RNYM_PARAM['exp'], settings.RNYM_PARAM['gamma'])
+        grnym = gmpy2.powmod(grnym, settings.RNYM_PARAM['exp'], settings.RNYM_PARAM['gamma'])
         params = {}
         priv = {}
         # generate randoms
@@ -38,29 +38,29 @@ class VeryfyTest(TestCase):
         priv['r'] = random.randrange(1<<32)
         priv['r_'] = priv['rz'] - e * priv['rw']
         # calc Cs
-        params['Cs'] = pow(pubkey['g'], s, pubkey['n']) * pow(pubkey['h'], priv['rs'], pubkey['n']) % pubkey['n']
-        params['Ce'] = pow(pubkey['g'], e, pubkey['n']) * pow(pubkey['h'], priv['re'], pubkey['n']) % pubkey['n']
-        params['Cv'] = v * pow(pubkey['g'], priv['w'], pubkey['n']) % pubkey['n']
-        params['Cw'] = pow(pubkey['g'], priv['w'], pubkey['n']) * pow(pubkey['h'], priv['rw'], pubkey['n']) % pubkey['n']
+        params['Cs'] = gmpy2.powmod(pubkey['g'], s, pubkey['n']) * gmpy2.powmod(pubkey['h'], priv['rs'], pubkey['n']) % pubkey['n']
+        params['Ce'] = gmpy2.powmod(pubkey['g'], e, pubkey['n']) * gmpy2.powmod(pubkey['h'], priv['re'], pubkey['n']) % pubkey['n']
+        params['Cv'] = v * gmpy2.powmod(pubkey['g'], priv['w'], pubkey['n']) % pubkey['n']
+        params['Cw'] = gmpy2.powmod(pubkey['g'], priv['w'], pubkey['n']) * gmpy2.powmod(pubkey['h'], priv['rw'], pubkey['n']) % pubkey['n']
         priv['z'] = e * priv['w']
-        params['C'] = pow(params['Cv'], e, pubkey['n']) * pow(pubkey['h'], priv['r'], pubkey['n']) % pubkey['n']
-        params['Cx'] = pow(pubkey['g'], uk, pubkey['n']) * pow(pubkey['h'], priv['rx'], pubkey['n']) % pubkey['n']
-        params['Cz'] = pow(pubkey['g'], priv['z'], pubkey['n']) * pow(pubkey['h'], priv['rz'], pubkey['n']) % pubkey['n']
+        params['C'] = gmpy2.powmod(params['Cv'], e, pubkey['n']) * gmpy2.powmod(pubkey['h'], priv['r'], pubkey['n']) % pubkey['n']
+        params['Cx'] = gmpy2.powmod(pubkey['g'], uk, pubkey['n']) * gmpy2.powmod(pubkey['h'], priv['rx'], pubkey['n']) % pubkey['n']
+        params['Cz'] = gmpy2.powmod(pubkey['g'], priv['z'], pubkey['n']) * gmpy2.powmod(pubkey['h'], priv['rz'], pubkey['n']) % pubkey['n']
         # calc ys
-        params['y1'] = pow(params['Cv'], priv['r1'], pubkey['n']) * pow(pubkey['h'], priv['r2'], pubkey['n']) % pubkey['n']
-        params['y2'] = pow(pubkey['g'], priv['r1'], pubkey['n']) * pow(pubkey['h'], priv['r3'], pubkey['n']) % pubkey['n']
-        params['y3'] = pow(pubkey['a'], priv['r4'], pubkey['n']) * pow(pubkey['b'], priv['r5'], pubkey['n']) * \
-            pow(pubkey['g'], priv['r6'], pubkey['n']) * pow(pubkey['h'], priv['r7'], pubkey['n']) % pubkey['n']
-        params['y4'] = pow(pubkey['g'], priv['r4'], pubkey['n']) * pow(pubkey['h'], priv['r8'], pubkey['n']) % pubkey['n']
-        params['y5'] = pow(pubkey['g'], priv['r5'], pubkey['n']) * pow(pubkey['h'], priv['r9'], pubkey['n']) % pubkey['n']
-        params['y6'] = pow(pubkey['g'], priv['r10'], pubkey['n']) * pow(pubkey['h'], priv['r11'], pubkey['n']) % pubkey['n']
-        params['y7'] = pow(pubkey['g'], priv['r6'], pubkey['n']) * pow(pubkey['h'], priv['r12'], pubkey['n']) % pubkey['n']
-        params['y8'] = pow(params['Cv'], priv['r10'], pubkey['n']) * pow(pubkey['h'], priv['r7'], pubkey['n']) % pubkey['n']
-        params['y9'] = pow(pubkey['g'], priv['r13'], pubkey['n']) * pow(pubkey['h'], priv['r14'], pubkey['n']) % pubkey['n']
-        params['y10'] = pow(pubkey['g'], priv['r15'], pubkey['n']) * pow(pubkey['h'], priv['r16'], pubkey['n']) % pubkey['n']
-        params['y11'] = pow(pubkey['g'], priv['r17'], pubkey['n']) * pow(pubkey['h'], priv['r18'], pubkey['n']) % pubkey['n']
-        params['y12'] = pow(params['Cw'], priv['r17'], pubkey['n']) * pow(pubkey['h'], priv['r19'], pubkey['n']) % pubkey['n']
-        params['y13'] = pow(grnym, priv['r4'], settings.RNYM_PARAM['gamma'])
+        params['y1'] = gmpy2.powmod(params['Cv'], priv['r1'], pubkey['n']) * gmpy2.powmod(pubkey['h'], priv['r2'], pubkey['n']) % pubkey['n']
+        params['y2'] = gmpy2.powmod(pubkey['g'], priv['r1'], pubkey['n']) * gmpy2.powmod(pubkey['h'], priv['r3'], pubkey['n']) % pubkey['n']
+        params['y3'] = gmpy2.powmod(pubkey['a'], priv['r4'], pubkey['n']) * gmpy2.powmod(pubkey['b'], priv['r5'], pubkey['n']) * \
+            gmpy2.powmod(pubkey['g'], priv['r6'], pubkey['n']) * gmpy2.powmod(pubkey['h'], priv['r7'], pubkey['n']) % pubkey['n']
+        params['y4'] = gmpy2.powmod(pubkey['g'], priv['r4'], pubkey['n']) * gmpy2.powmod(pubkey['h'], priv['r8'], pubkey['n']) % pubkey['n']
+        params['y5'] = gmpy2.powmod(pubkey['g'], priv['r5'], pubkey['n']) * gmpy2.powmod(pubkey['h'], priv['r9'], pubkey['n']) % pubkey['n']
+        params['y6'] = gmpy2.powmod(pubkey['g'], priv['r10'], pubkey['n']) * gmpy2.powmod(pubkey['h'], priv['r11'], pubkey['n']) % pubkey['n']
+        params['y7'] = gmpy2.powmod(pubkey['g'], priv['r6'], pubkey['n']) * gmpy2.powmod(pubkey['h'], priv['r12'], pubkey['n']) % pubkey['n']
+        params['y8'] = gmpy2.powmod(params['Cv'], priv['r10'], pubkey['n']) * gmpy2.powmod(pubkey['h'], priv['r7'], pubkey['n']) % pubkey['n']
+        params['y9'] = gmpy2.powmod(pubkey['g'], priv['r13'], pubkey['n']) * gmpy2.powmod(pubkey['h'], priv['r14'], pubkey['n']) % pubkey['n']
+        params['y10'] = gmpy2.powmod(pubkey['g'], priv['r15'], pubkey['n']) * gmpy2.powmod(pubkey['h'], priv['r16'], pubkey['n']) % pubkey['n']
+        params['y11'] = gmpy2.powmod(pubkey['g'], priv['r17'], pubkey['n']) * gmpy2.powmod(pubkey['h'], priv['r18'], pubkey['n']) % pubkey['n']
+        params['y12'] = gmpy2.powmod(params['Cw'], priv['r17'], pubkey['n']) * gmpy2.powmod(pubkey['h'], priv['r19'], pubkey['n']) % pubkey['n']
+        params['y13'] = gmpy2.powmod(grnym, priv['r4'], settings.RNYM_PARAM['gamma'])
         # clac x
         params['x'] = hashing(
             params['C'], params['Cv'], params['Ce'],
@@ -76,7 +76,7 @@ class VeryfyTest(TestCase):
             )):
             params['z{}'.format(i+1)] = priv['r{}'.format(i+1)] + params['x'] * j
         # clac rnym
-        params['rnym'] = pow(grnym, uk, settings.RNYM_PARAM['gamma'])
+        params['rnym'] = gmpy2.powmod(grnym, uk, settings.RNYM_PARAM['gamma'])
         # vrfy
         self.assertIsInstance(verify(pubkey, str(classno), **params), bool)
         
