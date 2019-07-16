@@ -22,7 +22,7 @@ jobs:
 
       # Download and cache dependencies
       - run: sudo chown -R circleci:circleci /usr/local/bin
-      - run: sudo chown -R circleci:circleci /usr/local/lib/python3.6/site-packages
+      - run: sudo chown -R circleci:circleci /usr/local/lib/python3.7/site-packages
       - restore_cache:
           keys:
             - deps9-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
