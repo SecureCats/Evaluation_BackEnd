@@ -1,4 +1,0 @@
-Django==2.2.3
-gmpy2==2.1.0b1
-requests==2.22.0
-pycrypto==2.6.1

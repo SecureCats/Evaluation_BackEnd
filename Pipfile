@@ -1,0 +1,16 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.tuna.tsinghua.edu.cn/simple"
+verify_ssl = true
+
+[dev-packages]
+
+
+[packages]
+gmpy2 = "*"
+requests = "*"
+pycrypto = "*"
+Django = ">=2.2.3"
+
+[requires]
+python_version = "3.7"
