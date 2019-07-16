@@ -1,6 +1,7 @@
 from django.test import TestCase, override_settings, Client
 from django.conf import settings
 from .utils import verify, test_privkey, test_pubkey, hashing
+from .models import Question
 from Crypto.Util import number
 import random
 import gmpy2
@@ -9,6 +10,11 @@ from hashlib import sha256
 # Create your tests here.
 class VeryfyTest(TestCase):
     fixtures = ['data.json']
+
+    @classmethod
+    def setUpClass(cls):
+        cls.client = Client()
+        return super().setUpClass()
 
     def gen_credentials(self, pubkey, uk, course_no):
         q = pubkey['n'] // test_privkey
@@ -86,20 +92,38 @@ class VeryfyTest(TestCase):
         
     @override_settings(PUBKEY_TESTING=True)
     def test_init_api(self):
-        client = Client()
-        r = client.get('/api/v1/init?classno=666&semester=2018-2019-2')
+        r = self.client.get('/api/v1/init?classno=666&semester=2018-2019-2')
         self.assertEqual(r.status_code, 200)
 
-    @override_settings(PUBKEY_TESTING=True)
-    def test_sign_api(self):
-        course_no = '2018-2019-2-231'
-        params = self.gen_credentials(test_pubkey, 1223333, course_no)
+    def post_auth_data(self, course_no, uk):
+        params = self.gen_credentials(test_pubkey, uk, course_no)
         self.assertEqual(verify(test_pubkey, course_no, **params), True)
-        client = Client()
-        r = client.post(
+        r = self.client.post(
                 '/api/v1/auth?classno=666&course_no={}'.format(course_no),
                 {'credentials': params}, 
                 content_type='application/json'
             )
+        return r, params['rnym']
+
+    @override_settings(PUBKEY_TESTING=True)
+    def test_sign_api(self):
+        course_no = '2018-2019-2-231'
+        r, _ = self.post_auth_data(course_no, 122333)
         self.assertEqual(r.status_code, 200)
         self.assertEqual(r.json()['status'], 'accept')
+
+    def post_result_data(self, course_no, classno, rnym):
+        question_set = Question.objects.all()
+        result = {str(q.id): 'A' for q in question_set}
+        r = self.client.post(
+            '/api/v1/result?course_no={}&classno={}'.format(course_no, classno),
+            {'rnym': rnym, 'result': result},
+            content_type='application/json'
+        )
+        return r
+    
+    @override_settings(PUBKEY_TESTING=True)
+    def test_submit_success(self):
+        course_no = '2018-2019-2-231'
+        r1, rnym = self.post_auth_data(course_no, 33221)
+        self.assertJSONEqual(r1.content, {'status': 'accept'})

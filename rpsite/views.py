@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, \
     get_list_or_404
-from django.http import JsonResponse, HttpResponseBadRequest
+from django.http import JsonResponse, HttpResponseBadRequest, HttpResponseForbidden
 from . import models
 from .utils import test_pubkey, verify
 from django.conf import settings
@@ -90,3 +90,29 @@ def verify_user(request):
             return JsonResponse({'status': 'accept'})
     else:
         return JsonResponse({'status': 'denied'})
+
+def submit_evaluation(request):
+    try:
+        classno = request.GET['classno']
+        course_no = request.GET['course_no']
+        raw_json = json.loads(request.body)
+        rnym = raw_json['rnym']
+        result = raw_json['result']
+    except:
+        return HttpResponseBadRequest()
+    evaluation_set = models.Evaluation.objects.filter(course__course_no=course_no, rnym=rnym)
+    if not evaluation_set:
+        return HttpResponseForbidden()
+    evaluation = evaluation_set[0]
+    if evaluation.evaluated:
+        return HttpResponseForbidden('already evaluated')
+    question_set = models.Question.objects.all()
+    for question in question_set:
+        if question.id not in result:
+            return HttpResponseBadRequest('not complete')
+    for question in question_set:
+        option = result[str(question.id)]
+        question_option = get_object_or_404(models.Option, question=question, option_choice=option)
+        evaluation_item = models.EvaluationItem(option=question_option, evaluation=evaluation)
+        evaluation_item.save()
+
