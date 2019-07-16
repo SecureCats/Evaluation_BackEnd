@@ -55,7 +55,7 @@ def get_pubkey(classno, semester):
     return {key:int(res_dic[key]) for key in res_dic}
 
 def verify_user(request):
-    class_no = request.GET['class_no']
+    class_no = request.GET['classno']
     course_no = request.GET['course_no']
     course = get_object_or_404(models.Course, course_no=course_no)
     semester = course.semester
@@ -70,15 +70,16 @@ def verify_user(request):
         for i in range(1, 14):
             params['y{}'.format(i)] = int(raw_json['y{}'.format(i)])
         for i in range(1, 20):
-            params['z{}'.format(i)] = int(raw_json['y{}'.format(i)])
+            params['z{}'.format(i)] = int(raw_json['z{}'.format(i)])
     except:
         return HttpResponseBadRequest()
     pubkey = get_pubkey(class_no, semester)
-    res = verify(pubkey, class_no, **params)
+    res = verify(pubkey, course_no, **params)
     if res:
         rnym = raw_json['rnym']
-        eva = models.Evaluation.objects.get(course__course_no=course_no, rnym=rnym)
+        eva = models.Evaluation.objects.filter(course__course_no=course_no, rnym=rnym)
         if eva:
+            eva = eva[0]
             if eva.evaluated:
                 return JsonResponse({'status': 'evaluated'})
             else:

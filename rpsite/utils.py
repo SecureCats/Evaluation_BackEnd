@@ -18,16 +18,19 @@ def verify(pubkey, course_no, **kwargs):
         params['Cs'], params['Cx'], params['Cz'],
         params['Cw'], pubkey['g'], pubkey['h']
     ):
+        print(1)
         return False
     if gmpy2.powmod(params['Cv'], params['z1'], pubkey['n']) * \
         gmpy2.powmod(pubkey['h'], params['z2'], pubkey['n']) * \
         gmpy2.invert(params['y1'], pubkey['n']) % pubkey['n'] != \
         gmpy2.powmod(params['C'], params['x'], pubkey['n']):
+        print(2)
         return False
     if gmpy2.powmod(pubkey['g'], params['z1'], pubkey['n']) * \
         gmpy2.powmod(pubkey['h'], params['z3'], pubkey['n']) * \
         gmpy2.invert(params['y2'], pubkey['n']) % pubkey['n'] != \
         gmpy2.powmod(params['Ce'], params['x'], pubkey['n']):
+        print(3)
         return False
     if gmpy2.powmod(pubkey['a'], params['z4'], pubkey['n']) * \
         gmpy2.powmod(pubkey['b'], params['z5'], pubkey['n']) * \
@@ -35,55 +38,66 @@ def verify(pubkey, course_no, **kwargs):
         gmpy2.powmod(pubkey['h'], params['z7'], pubkey['n']) * \
         gmpy2.invert(params['y3'], pubkey['n']) % pubkey['n'] != \
         gmpy2.powmod((params['C'] * gmpy2.invert(pubkey['c'], pubkey['n'])), params['x'], pubkey['n']):
+        print(4)
         return False
     if gmpy2.powmod(pubkey['g'], params['z4'], pubkey['n']) * \
         gmpy2.powmod(pubkey['h'], params['z8'], pubkey['n']) * \
         gmpy2.invert(params['y4'], pubkey['n']) % pubkey['n'] != \
         gmpy2.powmod(params['Cx'], params['x'], pubkey['n']):
+        print(5)
         return False
     if gmpy2.powmod(pubkey['g'], params['z5'], pubkey['n']) * \
         gmpy2.powmod(pubkey['h'], params['z9'], pubkey['n']) * \
         gmpy2.invert(params['y5'], pubkey['n']) % pubkey['n'] != \
         gmpy2.powmod(params['Cs'], params['x'], pubkey['n']):
+        print(6)
         return False
     if gmpy2.powmod(pubkey['g'], params['z10'], pubkey['n']) * \
         gmpy2.powmod(pubkey['h'], params['z11'], pubkey['n']) * \
         gmpy2.invert(params['y6'], pubkey['n']) % pubkey['n'] != \
         gmpy2.powmod(params['Ce'], params['x'], pubkey['n']):
+        print(7)
         return False
     if gmpy2.powmod(pubkey['g'], params['z6'], pubkey['n']) * \
         gmpy2.powmod(pubkey['h'], params['z12'], pubkey['n']) * \
         gmpy2.invert(params['y7'], pubkey['n']) % pubkey['n'] != \
         gmpy2.powmod(params['Cz'], params['x'], pubkey['n']):
+        print(8)
         return False
     if gmpy2.powmod(params['Cv'], params['z10'], pubkey['n']) * \
         gmpy2.powmod(pubkey['h'], params['z7'], pubkey['n']) * \
         gmpy2.invert(params['y8'], pubkey['n']) % pubkey['n'] != \
         gmpy2.powmod(params['C'], params['x'], pubkey['n']):
+        print(9)
         return False
     if gmpy2.powmod(grnym, params['z4'], settings.RNYM_PARAM['gamma']) * \
         gmpy2.invert(params['y13'], settings.RNYM_PARAM['gamma']) % settings.RNYM_PARAM['gamma'] != \
         gmpy2.powmod(params['rnym'], params['x'], settings.RNYM_PARAM['gamma']):
+        print(10)
         return False
     if gmpy2.powmod(pubkey['g'], params['z13'], pubkey['n']) * \
         gmpy2.powmod(pubkey['h'], params['z14'], pubkey['n']) * \
         gmpy2.invert(params['y9'], pubkey['n']) % pubkey['n'] != \
         gmpy2.powmod(params['Cz'], params['x'], pubkey['n']):
+        print(11)
         return False
     if gmpy2.powmod(pubkey['g'], params['z15'], pubkey['n']) * \
         gmpy2.powmod(pubkey['h'], params['z16'], pubkey['n']) * \
         gmpy2.invert(params['y10'], pubkey['n']) % pubkey['n'] != \
         gmpy2.powmod(params['Cw'], params['x'], pubkey['n']):
+        print(12)
         return False
     if gmpy2.powmod(pubkey['g'], params['z17'], pubkey['n']) * \
         gmpy2.powmod(pubkey['h'], params['z18'], pubkey['n']) * \
         gmpy2.invert(params['y11'], pubkey['n']) % pubkey['n'] != \
         gmpy2.powmod(params['Ce'], params['x'], pubkey['n']):
+        print(13)
         return False
     if gmpy2.powmod(params['Cw'], params['z17'], pubkey['n']) * \
         gmpy2.powmod(pubkey['h'], params['z19'], pubkey['n']) * \
         gmpy2.invert(params['y12'], pubkey['n']) % pubkey['n'] != \
         gmpy2.powmod(params['Cz'], params['x'], pubkey['n']):
+        print(13)
         return False
 
     return True

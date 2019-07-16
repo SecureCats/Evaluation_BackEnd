@@ -1,4 +1,4 @@
-from django.test import TestCase
+from django.test import TestCase, override_settings, Client
 from django.conf import settings
 from .utils import verify, test_privkey, test_pubkey, hashing
 from Crypto.Util import number
@@ -8,10 +8,9 @@ from hashlib import sha256
 
 # Create your tests here.
 class VeryfyTest(TestCase):
+    fixtures = ['data.json']
 
-    def test_verify_function(self):
-        pubkey = test_pubkey
-        uk = 123333
+    def gen_credentials(self, pubkey, uk, course_no):
         q = pubkey['n'] // test_privkey
         s = random.randrange(1<<8196)
         e = number.getPrime(2050)
@@ -24,8 +23,7 @@ class VeryfyTest(TestCase):
         right = tmp
         self.assertEqual(left, right)
         # the signiture is (e, v, s)
-        classno = 666
-        grnym = int(sha256(str(classno).encode()).hexdigest(), 16) % 731499577
+        grnym = int(sha256(str(course_no).encode()).hexdigest(), 16) % 731499577
         grnym = gmpy2.powmod(grnym, settings.RNYM_PARAM['exp'], settings.RNYM_PARAM['gamma'])
         params = {}
         priv = {}
@@ -77,6 +75,31 @@ class VeryfyTest(TestCase):
             params['z{}'.format(i+1)] = priv['r{}'.format(i+1)] + params['x'] * j
         # clac rnym
         params['rnym'] = gmpy2.powmod(grnym, uk, settings.RNYM_PARAM['gamma'])
+        rtval = {i: int(params[i]) for i in params}
+        return rtval
+
+    def test_verify_function(self):
+        course_no = '2018-2019-2-231'
+        params = self.gen_credentials(test_pubkey, 1223333, course_no)
         # vrfy
-        self.assertIsInstance(verify(pubkey, str(classno), **params), bool)
+        self.assertEqual(verify(test_pubkey, str(course_no), **params), True)
         
+    @override_settings(PUBKEY_TESTING=True)
+    def test_init_api(self):
+        client = Client()
+        r = client.get('/api/v1/init?classno=666&semester=2018-2019-2')
+        self.assertEqual(r.status_code, 200)
+
+    @override_settings(PUBKEY_TESTING=True)
+    def test_sign_api(self):
+        course_no = '2018-2019-2-231'
+        params = self.gen_credentials(test_pubkey, 1223333, course_no)
+        self.assertEqual(verify(test_pubkey, course_no, **params), True)
+        client = Client()
+        r = client.post(
+                '/api/v1/auth?classno=666&course_no={}'.format(course_no),
+                {'credentials': params}, 
+                content_type='application/json'
+            )
+        self.assertEqual(r.status_code, 200)
+        self.assertEqual(r.json()['status'], 'accept')
