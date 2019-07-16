@@ -40,7 +40,7 @@ class Course(models.Model):
 
     course_name = models.CharField('课程名称', max_length=20)
     course_no = models.CharField('课程编号', unique=True, max_length=20)
-    semeser = models.CharField('学期', max_length=20)
+    semester = models.CharField('学期', max_length=20)
     teaching_class = models.ManyToManyField(TeachingClass)
 
     def __str__(self):
@@ -51,6 +51,7 @@ class Evaluation(models.Model):
 
     rnym = models.CharField("rnym", max_length=100)
     course = models.ForeignKey(Course, models.CASCADE)
+    evaluated = models.BooleanField('是否已评', default=False)
 
     def __str__(self):
         return '{}-{}'.format(self.course.course_name, hex(int(self.rnym))[2:10])
