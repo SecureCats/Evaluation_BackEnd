@@ -127,3 +127,19 @@ class VeryfyTest(TestCase):
         course_no = '2018-2019-2-231'
         r1, rnym = self.post_auth_data(course_no, 33221)
         self.assertJSONEqual(r1.content, {'status': 'accept'})
+        r2 = self.post_result_data(course_no, 666, rnym)
+        self.assertEqual(r2.status_code, 200)
+        self.assertJSONEqual(r2.content, {'status': 'success'})
+
+    @override_settings(PUBKEY_TESTING=True)
+    def test_dupsubmit(self):
+        course_no = '2018-2019-2-231'
+        r1, rnym = self.post_auth_data(course_no, 34221)
+        self.assertJSONEqual(r1.content, {'status': 'accept'})
+        r2 = self.post_result_data(course_no, 666, rnym)
+        self.assertEqual(r2.status_code, 200)
+        self.assertJSONEqual(r2.content, {'status': 'success'})
+        r3 = self.post_result_data(course_no, 666, rnym)
+        self.assertEqual(r3.status_code, 403)
+        self.assertIn('already', r3.content)
+

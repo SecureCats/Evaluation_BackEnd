@@ -108,11 +108,13 @@ def submit_evaluation(request):
         return HttpResponseForbidden('already evaluated')
     question_set = models.Question.objects.all()
     for question in question_set:
-        if question.id not in result:
+        if str(question.id) not in result:
             return HttpResponseBadRequest('not complete')
     for question in question_set:
         option = result[str(question.id)]
         question_option = get_object_or_404(models.Option, question=question, option_choice=option)
         evaluation_item = models.EvaluationItem(option=question_option, evaluation=evaluation)
         evaluation_item.save()
-
+    evaluation.evaluated = True
+    evaluation.save()
+    return JsonResponse({'status': 'success'})
