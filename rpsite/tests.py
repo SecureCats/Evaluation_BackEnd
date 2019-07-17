@@ -1,14 +1,14 @@
 from django.test import TestCase, override_settings, Client
 from django.conf import settings
 from .utils import verify, test_privkey, test_pubkey, hashing
-from .models import Question
+from .models import Question, Evaluation
 from Crypto.Util import number
 import random
 import gmpy2
 from hashlib import sha256
 
 # Create your tests here.
-class VeryfyTest(TestCase):
+class VeryfiTest(TestCase):
     fixtures = ['data.json']
 
     @classmethod
@@ -81,7 +81,7 @@ class VeryfyTest(TestCase):
             params['z{}'.format(i+1)] = priv['r{}'.format(i+1)] + params['x'] * j
         # clac rnym
         params['rnym'] = gmpy2.powmod(grnym, uk, settings.RNYM_PARAM['gamma'])
-        rtval = {i: int(params[i]) for i in params}
+        rtval = {i: str(params[i]) for i in params}
         return rtval
 
     def test_verify_function(self):
@@ -130,6 +130,9 @@ class VeryfyTest(TestCase):
         r2 = self.post_result_data(course_no, 666, rnym)
         self.assertEqual(r2.status_code, 200)
         self.assertJSONEqual(r2.content, {'status': 'success'})
+        evaluation = Evaluation.objects.first()
+        self.assertEqual(evaluation.rnym, rnym)
+        self.assertEqual(evaluation.evaluated, True)
 
     @override_settings(PUBKEY_TESTING=True)
     def test_dupsubmit(self):
@@ -141,5 +144,36 @@ class VeryfyTest(TestCase):
         self.assertJSONEqual(r2.content, {'status': 'success'})
         r3 = self.post_result_data(course_no, 666, rnym)
         self.assertEqual(r3.status_code, 403)
-        self.assertIn('already', r3.content)
 
+    @override_settings(PUBKEY_TESTING=True)
+    def test_submit_without_auth(self):
+        course_no = '2018-2019-2-231'
+        r = self.post_result_data(course_no, 666, '2882987187')
+        self.assertEqual(r.status_code, 403)
+
+    @override_settings(PUBKEY_TESTING=True)
+    def test_auth_after_submite(self):
+        course_no = '2018-2019-2-231'
+        r1, rnym = self.post_auth_data(course_no, 39221)
+        self.assertJSONEqual(r1.content, {'status': 'accept'})
+        r2 = self.post_result_data(course_no, 666, rnym)
+        self.assertEqual(r2.status_code, 200)
+        self.assertJSONEqual(r2.content, {'status': 'success'})
+        query_set = Evaluation.objects.filter(course__course_no=course_no, rnym=rnym)
+        self.assertEqual(len(query_set) ,1)
+        self.assertTrue(query_set[0].evaluated)
+        r3, rnym2 = self.post_auth_data(course_no, 39221)
+        self.assertEqual(rnym, rnym2)
+        self.assertEqual(r2.status_code, 200)
+        self.assertJSONEqual(r3.content, {'status': 'evaluated'})
+        
+    @override_settings(PUBKEY_TESTING=True)
+    def test_dupauth(self):
+        course_no = '2018-2019-2-231'
+        r1, rnym = self.post_auth_data(course_no, 39321)
+        self.assertJSONEqual(r1.content, {'status': 'accept'})
+        r3, _ = self.post_auth_data(course_no, 39321)
+        self.assertJSONEqual(r1.content, {'status': 'accept'})
+        r2 = self.post_result_data(course_no, 666, rnym)
+        self.assertEqual(r2.status_code, 200)
+        self.assertJSONEqual(r2.content, {'status': 'success'})

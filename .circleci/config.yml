@@ -35,6 +35,7 @@ jobs:
             sudo apt-get install libgmp3-dev libmpfr-dev libmpc-dev
             sudo pip install pipenv
             pipenv install
+            pipenv install --dev
 
       - save_cache:
           paths:
@@ -51,7 +52,7 @@ jobs:
       - run:
           name: run tests
           command: |
-            pipenv run python manage.py test
+            pipenv run python manage.py test --parallel=4
 
       - store_artifacts:
           path: test-reports
