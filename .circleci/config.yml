@@ -8,7 +8,7 @@ jobs:
     docker:
       # specify the version you desire here
       # use `-browsers` prefix for selenium tests, e.g. `3.6.1-browsers`
-      - image: circleci/python:3.7.4-buster
+      - image: circleci/python:3.7.4-buster-node-browser
 
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
@@ -33,7 +33,7 @@ jobs:
       - restore_cache:
           name: restore yarn cache
           keys:
-            - yarn-package-{{ checksum "frontend/yarn.lock" }}
+            - yarn-package-{{ checksum "Evaluation_FrontEnd/yarn.lock" }}
 
       - run:
           name: install dependencies
@@ -59,8 +59,8 @@ jobs:
       - save_cache:
           paths:
             - ~/.cache/yarn
-            - frontend/node_modules
-          key: yarn-package-{{ checksum "frontend/yarn.lock" }}
+            - Evaluation_FrontEnd/node_modules
+          key: yarn-package-{{ checksum "Evaluation_FrontEnd/yarn.lock" }}
           name: save yarn cache
 
       # run tests!
@@ -75,7 +75,7 @@ jobs:
       - run:
           name: frontend tests
           command: |
-            cd frontend && yarn run test:unit
+            cd Evaluation_FrontEnd && yarn run test:unit
       - store_artifacts:
           path: test-reports
           destination: test-reports
