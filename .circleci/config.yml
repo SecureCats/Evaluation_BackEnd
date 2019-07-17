@@ -48,7 +48,7 @@ jobs:
           command: |
             yarn global add @vue/cli @vue/cli-service @vue/cli-plugin-unit-jest
             export PATH="$PATH:$(yarn global bin)"
-            cd frontend && yarn install && yarn build --frozen-lockfile
+            cd Evaluation_FrontEnd && yarn install && yarn build --frozen-lockfile
 
       - save_cache:
           paths:
