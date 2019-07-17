@@ -1,0 +1,3 @@
+[submodule "Evaluation_FrontEnd"]
+	path = Evaluation_FrontEnd
+	url = git@github.com:SecureCats/Evaluation_FrontEnd.git
