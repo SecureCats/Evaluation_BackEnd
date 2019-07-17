@@ -55,7 +55,7 @@ ROOT_URLCONF = 'Evaluation_BackEnd.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'Evaluation_FrontEnd', 'dist')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -119,6 +119,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+    os.path.join(BASE_DIR, 'Evaluation_FrontEnd', 'dist',),
+]
 
 RNYM_PARAM = {
     'gamma': 76082481189518171659618347271359316061974334924246135550677426868159186269917,
