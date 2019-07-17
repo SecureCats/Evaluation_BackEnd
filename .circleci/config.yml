@@ -41,6 +41,7 @@ jobs:
             sudo apt-get install libgmp3-dev libmpfr-dev libmpc-dev
             sudo pip install pipenv
             pipenv install
+            pipenv install --dev
       - run:
           name: build frontend
           command: |
@@ -70,12 +71,12 @@ jobs:
       - run:
           name: run tests
           command: |
-            pipenv run python manage.py test
+            pipenv run python manage.py test --parallel
       - run:
           name: frontend tests
           command: |
             cd frontend && yarn run test:unit
-            
+
       - store_artifacts:
           path: test-reports
           destination: test-reports
