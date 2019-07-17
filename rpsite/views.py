@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, \
     get_list_or_404
-from django.http import JsonResponse, HttpResponseBadRequest, HttpResponseForbidden
+from django.http import JsonResponse,HttpResponse, HttpResponseBadRequest, HttpResponseForbidden
 from . import models
 from .utils import test_pubkey, verify
 from django.conf import settings
@@ -118,3 +118,7 @@ def submit_evaluation(request):
     evaluation.evaluated = True
     evaluation.save()
     return JsonResponse({'status': 'success'})
+
+
+def static(requests,_=None,**kwargs):
+    return render(requests,'pes/index.html')

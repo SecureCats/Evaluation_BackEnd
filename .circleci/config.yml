@@ -8,7 +8,7 @@ jobs:
     docker:
       # specify the version you desire here
       # use `-browsers` prefix for selenium tests, e.g. `3.6.1-browsers`
-      - image: circleci/python:3.7.4-buster
+      - image: circleci/python:3.7.4-buster-node-browsers
 
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
@@ -19,15 +19,22 @@ jobs:
 
     steps:
       - checkout
+      - run: git submodule sync
+      - run: git submodule update --init
 
       # Download and cache dependencies
       - run: sudo chown -R circleci:circleci /usr/local/bin
       - run: sudo chown -R circleci:circleci /usr/local/lib/python3.7/site-packages
       - restore_cache:
+          name: restore pipenv cache
           keys:
             - deps9-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
+      - restore_cache:
+          name: restore yarn cache
+          keys:
+            - yarn-package-{{ checksum "Evaluation_FrontEnd/yarn.lock" }}
 
       - run:
           name: install dependencies
@@ -36,6 +43,12 @@ jobs:
             sudo pip install pipenv
             pipenv install
             pipenv install --dev
+      - run:
+          name: build frontend
+          command: |
+            yarn global add @vue/cli @vue/cli-service @vue/cli-plugin-unit-jest
+            export PATH="$PATH:$(yarn global bin)"
+            cd Evaluation_FrontEnd && yarn install && yarn build --frozen-lockfile
 
       - save_cache:
           paths:
@@ -43,6 +56,13 @@ jobs:
             - "/usr/local/bin"
             - "/usr/local/lib/python3.7/site-packages"
           key: deps9-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+        
+      - save_cache:
+          paths:
+            - ~/.cache/yarn
+            - Evaluation_FrontEnd/node_modules
+          key: yarn-package-{{ checksum "Evaluation_FrontEnd/yarn.lock" }}
+          name: save yarn cache
 
       # run tests!
       # this example uses Django's built-in test-runner
@@ -52,8 +72,11 @@ jobs:
       - run:
           name: run tests
           command: |
-            pipenv run python manage.py test --parallel=4
-
+            pipenv run python manage.py test --parallel
+      - run:
+          name: frontend tests
+          command: |
+            cd Evaluation_FrontEnd && yarn run test:unit
       - store_artifacts:
           path: test-reports
           destination: test-reports
