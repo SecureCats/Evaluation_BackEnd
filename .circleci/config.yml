@@ -19,6 +19,8 @@ jobs:
 
     steps:
       - checkout
+      - run: git submodule sync
+      - run: git submodule update --init
 
       # Download and cache dependencies
       - run: sudo chown -R circleci:circleci /usr/local/bin
@@ -28,6 +30,10 @@ jobs:
             - deps9-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
+      - restore_cache:
+          name: restore yarn cache
+          keys:
+            - yarn-package-{{ checksum "frontend/yarn.lock" }}
 
       - run:
           name: install dependencies
@@ -36,6 +42,12 @@ jobs:
             sudo pip install pipenv
             pipenv install
             pipenv install --dev
+      - run:
+          name: build frontend
+          command: |
+            yarn global add @vue/cli @vue/cli-service @vue/cli-plugin-unit-jest
+            export PATH="$PATH:$(yarn global bin)"
+            cd frontend && yarn install && yarn build --frozen-lockfile
 
       - save_cache:
           paths:
@@ -43,6 +55,13 @@ jobs:
             - "/usr/local/bin"
             - "/usr/local/lib/python3.7/site-packages"
           key: deps9-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+        
+      - save_cache:
+          paths:
+            - ~/.cache/yarn
+            - frontend/node_modules
+          key: yarn-package-{{ checksum "frontend/yarn.lock" }}
+          name: save yarn cache
 
       # run tests!
       # this example uses Django's built-in test-runner
@@ -52,8 +71,12 @@ jobs:
       - run:
           name: run tests
           command: |
-            pipenv run python manage.py test --parallel=4
-
+            pipenv run python manage.py test
+      - run:
+          name: frontend tests
+          command: |
+            cd frontend && yarn run test:unit
+            
       - store_artifacts:
           path: test-reports
           destination: test-reports
