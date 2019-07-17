@@ -76,7 +76,6 @@ jobs:
           name: frontend tests
           command: |
             cd frontend && yarn run test:unit
-
       - store_artifacts:
           path: test-reports
           destination: test-reports
