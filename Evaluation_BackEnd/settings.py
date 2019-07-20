@@ -137,3 +137,6 @@ RNYM_PARAM = {
 AIP_URL = os.environ.get('AIP_URL') or 'http://localhost:8001/'
 
 PUBKEY_TESTING = False
+
+# solve cross-region communication problem.
+X_FRAME_OPTIONS = f'ALLOWALL'
