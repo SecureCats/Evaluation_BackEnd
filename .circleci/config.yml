@@ -82,7 +82,7 @@ jobs:
       - run:
           name: build docker image
           command: |
-            docker build -t felinae98/tapes-pes
+            docker build -t felinae98/tapes-pes .
             echo $DOCKER_PASS | docker login -u $DOCKER_LOGIN --password-stdin
             docker push felinae98/tapes-pes
       - store_artifacts:
