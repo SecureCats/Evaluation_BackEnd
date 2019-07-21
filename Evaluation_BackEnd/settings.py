@@ -134,6 +134,6 @@ RNYM_PARAM = {
     'exp': 5088444
 }
 
-AIP_URL = os.environ.get('AIP_URL') or 'http://localhost:8001/'
+AIP_URL = os.environ.get('AIP_URL') or 'https://aip.tapes.ga/'
 
 PUBKEY_TESTING = False
