@@ -12,6 +12,7 @@ gmpy2 = "*"
 requests = "*"
 Django = ">=2.2.3"
 pycryptodome = "*"
+django-environ = "*"
 
 [requires]
 python_version = "3.7"

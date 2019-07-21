@@ -11,6 +11,14 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+import environ
+
+env = environ.Env(
+    DEBUG=(bool, True),
+    SECRET_KEY=(str, '*nj)g#zo$$6s4k4+_@qpz0o7d6aab7_lt46u0em@7g%k(@w4o)'),
+    AIP_URL=(str, 'https://aip.tapes.ga/')
+)
+environ.Env.read_env()
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -23,10 +31,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '*nj)g#zo$$6s4k4+_@qpz0o7d6aab7_lt46u0em@7g%k(@w4o)'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env('DEBUG')
 
 ALLOWED_HOSTS = [
-    '*'
+    '*',
+    'pes.tapes.ga'
 ]
 
 
@@ -77,10 +86,7 @@ WSGI_APPLICATION = 'Evaluation_BackEnd.wsgi.application'
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+    'default': env.db(default='sqlite:///'+os.path.join(BASE_DIR, 'db.sqlite3'))
 }
 
 
@@ -121,9 +127,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = '/usr/share/nginx/html/static/'
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static"),
     os.path.join(BASE_DIR, 'Evaluation_FrontEnd', 'dist',),
 ]
 
@@ -134,6 +140,6 @@ RNYM_PARAM = {
     'exp': 5088444
 }
 
-AIP_URL = os.environ.get('AIP_URL') or 'https://aip.tapes.ga/'
+AIP_URL = env('AIP_URL')
 
 PUBKEY_TESTING = False
