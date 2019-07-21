@@ -12,8 +12,8 @@ RUN sed -i 's/deb.debian.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apt/sources.li
     rm -rf /var/lib/apt/lists/* && \
     pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple && \
     pip install -r requirements.txt --no-cache-dir && \
-    yarn global add @vue/cli @vue/cli-service @vue/cli-plugin-unit-jest && \
-    cd Evaluation_FrontEnd && yarn install && yarn build --frozen-lockfile && cd .. \
+    # yarn global add @vue/cli @vue/cli-service @vue/cli-plugin-unit-jest && \
+    # cd Evaluation_FrontEnd && yarn install && yarn build --frozen-lockfile && cd .. \
     rm -rf /var/lib/apt/lists/* && \
     echo "daemon off;" >> /etc/nginx/nginx.conf && \
     python manage.py collectstatic --noinput
