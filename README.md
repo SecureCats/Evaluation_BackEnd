@@ -1,6 +1,9 @@
 # Evaluation Backend
 
 ![](https://flat.badgen.net/circleci/github/SecureCats/Evaluation_BackEnd?icon=circleci)
+![](Evaluation_FrontEnd/coverage/badge-branches.svg)
+![](Evaluation_FrontEnd/coverage/badge-lines.svg)
+![](Evaluation_FrontEnd/coverage/badge-statements.svg)
 
 > Backend server for TAPES | The totally anonymous professor evaluation system.
 
