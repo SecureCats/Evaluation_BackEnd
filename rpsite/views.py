@@ -50,7 +50,9 @@ def get_pubkey(classno, semester):
         return test_pubkey
     aip_site = settings.AIP_URL if settings.AIP_URL.endswith('/')  \
         else settings.AIP_URL + '/'
-    res = requests.get('{}api/v1/pubkey/{}/{}'.format(aip_site,semester, classno))
+    url = '{}api/v1/pubkey/{}/{}'.format(aip_site,semester, classno)
+    print(url)
+    res = requests.get(url)
     print(res.text)
     res_dic = json.loads(res.text)
     print(res_dic)
