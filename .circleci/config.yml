@@ -82,9 +82,12 @@ jobs:
       - run:
           name: build docker image
           command: |
-            docker build -t felinae98/tapes-pes .
+            TAG=0.1.$CIRCLE_BUILD_NUM
+            docker build -t felinae98/tapes-pes:$TAG .
+            docker tag felinae98/tapes-pes:$TAG felinae98/tapes-pes:$CIRCLE_BRANCH
             echo $DOCKER_PASS | docker login -u $DOCKER_LOGIN --password-stdin
-            docker push felinae98/tapes-pes
+            docker push felinae98/tapes-pes:$TAG
+            docker push felinae98/tapes-pes:$CIRCLE_BRANCH 
       - store_artifacts:
           path: test-reports
           destination: test-reports
