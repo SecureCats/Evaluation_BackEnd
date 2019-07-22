@@ -143,3 +143,6 @@ RNYM_PARAM = {
 AIP_URL = env('AIP_URL')
 
 PUBKEY_TESTING = False
+
+# solve cross-region communication problem.
+X_FRAME_OPTIONS = f'ALLOWALL'
