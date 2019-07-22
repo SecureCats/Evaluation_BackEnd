@@ -51,7 +51,9 @@ def get_pubkey(classno, semester):
     aip_site = settings.AIP_URL if settings.AIP_URL.endswith('/')  \
         else settings.AIP_URL + '/'
     res = requests.get('{}api/v1/pubkey/{}/{}'.format(aip_site,semester, classno))
+    print(res.text)
     res_dic = json.loads(res.text)
+    print(res_dic)
     return {key:int(res_dic[key]) for key in res_dic}
 
 def verify_user(request):
@@ -74,6 +76,7 @@ def verify_user(request):
     except:
         return HttpResponseBadRequest()
     pubkey = get_pubkey(class_no, semester)
+    print(pubkey)
     res = verify(pubkey, course_no, **params)
     if res:
         rnym = raw_json['rnym']
