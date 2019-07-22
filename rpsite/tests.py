@@ -18,8 +18,8 @@ class VeryfiTest(TestCase):
 
     def gen_credentials(self, pubkey, uk, course_no):
         q = pubkey['n'] // test_privkey
-        s = random.randrange(1<<8196)
-        e = number.getPrime(2050)
+        s = random.randrange(1<<4096)
+        e = number.getPrime(1026)
         d = int(gmpy2.invert(e, (test_privkey-1)*(q-1)))
         tmp = gmpy2.powmod(pubkey['a'], uk, pubkey['n']) * \
             gmpy2.powmod(pubkey['b'], s, pubkey['n']) * \

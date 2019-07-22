@@ -1,0 +1,13 @@
+certifi==2019.6.16
+chardet==3.0.4
+Django==2.2.3
+django-environ==0.4.5
+gmpy2==2.0.8
+idna==2.8
+pycryptodome==3.8.2
+pytz==2019.1
+requests==2.22.0
+sqlparse==0.3.0
+tblib==1.4.0
+urllib3==1.25.3
+uwsgi
