@@ -16,7 +16,7 @@ import environ
 env = environ.Env(
     DEBUG=(bool, True),
     SECRET_KEY=(str, '*nj)g#zo$$6s4k4+_@qpz0o7d6aab7_lt46u0em@7g%k(@w4o)'),
-    AIP_URL=(str, 'https://aip.tapes.ga/')
+    AIP_URL=(str, 'https://aip.fates.felinae98.cn/')
 )
 environ.Env.read_env()
 
@@ -35,7 +35,7 @@ DEBUG = env('DEBUG')
 
 ALLOWED_HOSTS = [
     '*',
-    'pes.tapes.ga'
+    'pes.fates.felinae98.cn'
 ]
 
 
