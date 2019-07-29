@@ -154,8 +154,8 @@ POST:
 
 ---
 
-📟 FATES ©SecureCats. Released under the MIT License.
+**📊 Evaluation Backend ©SecureCats.** Released under the MIT License.
 
-Authored and maintained by Team SecureCats.
+Authored and maintained by [Team SecureCats](https://github.com/SecureCats).
 
 © 2019 Made with 🖤 from BIT.
