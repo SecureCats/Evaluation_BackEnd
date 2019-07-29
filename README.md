@@ -9,6 +9,8 @@
 
 ## 📦 架构
 
+TES 匿名课程评价平台架构基于 Opaak（开放匿名身份认证架构）和零知识证明的理论支持。请参考：[SecureCats/RelatedWork](https://github.com/SecureCats/RelatedWork)
+
 ### 整体架构
 
 - Client 客户端：学生用户
