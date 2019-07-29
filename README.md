@@ -3,7 +3,7 @@
 # 📊 Evaluation Backend
 
 ![](https://img.shields.io/badge/team-SecureCats-blue?logo=data:image/svg+xml;base64,PHN2ZyBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGZpbGwtcnVsZT0iZXZlbm9kZCIgc3Ryb2tlLWxpbmVq%0D%0Ab2luPSJyb3VuZCIgc3Ryb2tlLW1pdGVybGltaXQ9IjIiIHZpZXdCb3g9IjAgMCAyOSAyOSIgeG1s%0D%0AbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cGF0aCBkPSJtMCA3LjI2MWMxLjUw%0D%0ANCAxMi42MDYgNi4zOTIgMTguMzkgMTQuMjE0IDIxLjYwNHYtMjguODY1Yy0yLjkzMiA1LjcyNC04%0D%0ALjE0MyA4LjExNC0xNC4yMTQgNy4yNjF6IiBmaWxsPSIjZmZmIiAvPgogIDxwYXRoIGQ9Im0yOC40%0D%0AMjkgNy4yNjFjLTEuNTA1IDEyLjYwNi02LjM5MiAxOC4zOS0xNC4yMTUgMjEuNjA0di0yOC44NjVj%0D%0AMi45MzMgNS43MjQgOC4xNDQgOC4xMTQgMTQuMjE1IDcuMjYxeiIgZmlsbD0iI2ViZWJlYiIgLz4K%0D%0APC9zdmc+Cg==&style=flat-square)
-[![](https://flat.badgen.net/circleci/github/SecureCats/Evaluation_BackEnd?icon=circleci)](https://img.shields.io/circleci/build/github/SecureCats/Evaluation_BackEnd?label=circleci&logo=circleci&style=flat-square)
+![](https://img.shields.io/circleci/build/github/SecureCats/Evaluation_BackEnd?label=circleci&logo=circleci&style=flat-square)
 
 > FATES: The Fully Anonymous Teaching Evaluation System
 
